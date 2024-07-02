@@ -16,7 +16,7 @@ public class App {
             addBookRecord(bookWorkers, "Вильгельмов", "Телль", "Уильямович", 15_000, 2);
         }
         // удалим сотрудника по id 9 для теста ошибки null
-        //bookWorkers.deleteWorker(9);
+        bookWorkers.deleteWorker(9);
         System.out.println(bookWorkers);
         // зарплата по отделам увеличена на 10 процентов
         bookWorkers.increaseSalary(-1,10);
