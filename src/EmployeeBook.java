@@ -128,10 +128,10 @@ public class EmployeeBook {
     }
 
     public double getSalaryMin(int department) {
-        double salaryMin = workers[0].getMonthSalary();
+        double salaryMin = getSalaryMax(-1);
         for (Employee employee : workers) {
             if (employee != null && (employee.getDepartment() == department || department <= 0)
-                    && employee.getMonthSalary() < salaryMin) {
+                    && employee.getMonthSalary() <= salaryMin) {
                 salaryMin = employee.getMonthSalary();
             }
         }
@@ -140,10 +140,10 @@ public class EmployeeBook {
 
     public Employee getWorkerWithMinSalary(int department) {
         Employee workerSalaryMin = null;
-        double salaryMin = getSalaryMax(-1);
+        double salaryMin = getSalaryMax(department);
         for (Employee employee : workers) {
             if (employee != null && (employee.getDepartment() == department || department <= 0)
-                    && employee.getMonthSalary() < salaryMin) {
+                    && employee.getMonthSalary() <= salaryMin) {
                 salaryMin = employee.getMonthSalary();
                 workerSalaryMin = employee;
             }
