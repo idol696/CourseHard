@@ -8,21 +8,19 @@ public class EmployeeBook {
     public boolean addWorker(String firstName, String lastName, String additiveName, double monthSalary, int department) {
 
         if (getCount() < 10) {
-            for (int i = 0; i < workers.length - 1; i++) {
+            for (int i = 0; i < workers.length; i++) {
                 if (workers[i] == null) {
                     workers[i] = new Employee(firstName, lastName, additiveName, monthSalary, department);
                     return true;
                 }
             }
-        } else {
-            System.out.println("Количество сотрудников превышено!");
         }
         return false;
     }
 
     public boolean deleteWorker(int id) {
-        for (int i = 0; i < workers.length - 1; i++) {
-            if (workers[i].getId() == id) {
+        for (int i = 0; i < workers.length; i++) {
+            if (workers[i] != null && workers[i].getId() == id) {
                 workers[i] = null;
                 return true;
             }
@@ -32,7 +30,7 @@ public class EmployeeBook {
 
     public Employee getWorker(int id) {
         for (Employee employee : workers) {
-            if (employee.getId() == id) {
+            if (employee != null && employee.getId() == id) {
                 return employee;
             }
         }
@@ -62,40 +60,104 @@ public class EmployeeBook {
         return count;
     }
 
-    public double getSalaryAverage() {
+    public int getCount(int department) {
+        int count = 0;
+        for (Employee employee : workers) {
+            if (employee != null && employee.getDepartment() == department) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getCountDepartments() {
+        int departments = 0;
+        for (Employee employee : workers) {
+            if (employee != null &&
+                    employee.getDepartment() > departments) {
+                departments = employee.getDepartment();
+            }
+        }
+        return departments;
+    }
+
+    public void increaseSalary(int department, int percent) {
+        for (int i = 0; i <= workers.length - 1; i++) {
+            if (workers[i] != null && (workers[i].getDepartment() == department || department <= 0)) {
+                double incMonthSalary = workers[i].getMonthSalary() * ( (double) percent / 100);
+                workers[i].setMonthSalary(workers[i].getMonthSalary() +incMonthSalary);
+            }
+        }
+    }
+
+    public double getSalaryAverage(int department) {
         double salaryAverage = 0;
         int count = 0;
         for (Employee employee : workers) {
-            salaryAverage += employee.getMonthSalary();
-            count++;
+            if (employee != null && (employee.getDepartment() == department || department <= 0)) {
+                salaryAverage += employee.getMonthSalary();
+                count++;
+            }
         }
         return salaryAverage / count;
     }
 
-    public  double getSalaryMax() {
+
+    public double getSalaryMax(int department) {
         double salaryMax = 0;
         for (Employee employee : workers) {
-            if (employee.getMonthSalary() > salaryMax) {
+            if (employee != null && (employee.getDepartment() == department || department <= 0) &&
+                    employee.getMonthSalary() > salaryMax) {
                 salaryMax = employee.getMonthSalary();
             }
         }
         return salaryMax;
     }
 
-    public double getSalaryMin() {
+    public Employee getWorkerWithMaxSalary(int department) {
+        Employee workerSalaryMax = null;
+        double salaryMax = 0;
+        for (Employee employee : workers) {
+            if (employee != null && (employee.getDepartment() == department || department <= 0)
+                    && employee.getMonthSalary() > salaryMax) {
+                salaryMax = employee.getMonthSalary();
+                workerSalaryMax = employee;
+            }
+        }
+        return workerSalaryMax;
+    }
+
+    public double getSalaryMin(int department) {
         double salaryMin = workers[0].getMonthSalary();
         for (Employee employee : workers) {
-            if (employee.getMonthSalary() < salaryMin) {
+            if (employee != null && (employee.getDepartment() == department || department <= 0)
+                    && employee.getMonthSalary() < salaryMin) {
                 salaryMin = employee.getMonthSalary();
             }
         }
         return salaryMin;
     }
 
-    public double getSalarySum() {
+    public Employee getWorkerWithMinSalary(int department) {
+        Employee workerSalaryMin = null;
+        double salaryMin = getSalaryMax(-1);
+        for (Employee employee : workers) {
+            if (employee != null && (employee.getDepartment() == department || department <= 0)
+                    && employee.getMonthSalary() < salaryMin) {
+                salaryMin = employee.getMonthSalary();
+                workerSalaryMin = employee;
+            }
+        }
+        return workerSalaryMin;
+    }
+
+
+    public double getSalarySum(int department) {
         double salarySum = 0;
         for (Employee employee : workers) {
-            salarySum += employee.getMonthSalary();
+            if (employee != null && (employee.getDepartment() == department || department <= 0)) {
+                salarySum += employee.getMonthSalary();
+            }
         }
         return salarySum;
 
@@ -104,8 +166,10 @@ public class EmployeeBook {
     @Override
     public String toString() {
         String result = "";
-        for (Employee employee: workers) {
-           if(employee != null) result = result.concat(employee.toString() + "\r\n");
+        for (Employee employee : workers) {
+            if (employee != null) {
+                result = result.concat(employee + "\r\n");
+            }
         }
         return result;
     }
